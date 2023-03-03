@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "test_task_3dlook"
+version = "0.1.0"
+description = "This is a Django project that provides API endpoints for managing products. The project implements a Product model with fields for name, description, uuid, created, updated, logo, and rotate_duration."
+authors = ["Hikmat Samadov <s3m3dov@hotmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.1.7"
+
+[tool.poetry.dev-dependencies]
+django-debug-toolbar = "^3.8.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
