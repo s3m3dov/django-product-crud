@@ -7,6 +7,7 @@ authors = ["Hikmat Samadov <s3m3dov@hotmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.10"
 Django = "^4.1.7"
+uuid = "^1.30"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "^3.8.1"
