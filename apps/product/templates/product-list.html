@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h4>Book List</h4>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Logo</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">None</th>
+            <th scope="col">None</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+        <tr>
+            <td>{{ product.logo }}</td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.name }}</td>
+            <td>
+                <a type="button" class="btn btn-warning"
+                   href="{% url 'product:product-update' product.uuid %}">Update</a>
+                <a type="button" class="btn btn-danger"
+                   href="{% url 'product:product-delete' product.uuid %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a type="button" class="btn btn-success" href="{%url 'product:product-create' %}">Create</a>
+</div>
+{% endblock %}
