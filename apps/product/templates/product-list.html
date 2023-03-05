@@ -31,7 +31,7 @@
             <td>{{ product.description }}</td>
             <td>
                 <a type="button" class="btn btn-info"
-                   href="{% url 'product:product-view' product.uuid %}">View</a>
+                   href="{% url 'product:product-detail' product.uuid %}">View</a>
                 <a type="button" class="btn btn-warning"
                    href="{% url 'product:product-update' product.uuid %}">Update</a>
                 <a type="button" class="btn btn-danger"
