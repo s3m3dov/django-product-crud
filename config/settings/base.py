@@ -12,13 +12,14 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
-import environ
+from environ import Env
 
 # Initialize environment variables
-env = environ.Env()
+env = Env()
+env.read_env(".env")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 
@@ -85,7 +86,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
@@ -93,7 +93,6 @@ USE_TZ = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom settings
@@ -105,20 +104,13 @@ ALLOWED_FILE_TYPES = ["image/jpeg", "image/png"]
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 DEBUG = env.bool("DJANGO_DEBUG", default=False)
-ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
-
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
+ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS", default="").split(",")
 
 # Celery settings
-CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='amqp://guest:guest@localhost:5672')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='redis://localhost:6379')
+CELERY_BROKER_URL = env(
+    "CELERY_BROKER_URL", default="amqp://guest:guest@localhost:5672"
+)
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default="redis://localhost:6379")
 
 # Media & Staticfiles settings
 AWS_S3_ENABLED = env.bool("AWS_S3_ENABLED", default=False)
@@ -134,7 +126,10 @@ if AWS_S3_ENABLED:
         f"{AWS_STORAGE_BUCKET_NAME}"
         f".s3.{AWS_S3_REGION_NAME}.amazonaws.com"
     )
-    AWS_S3_OBJECT_PARAMETERS = env.json('AWS_S3_OBJECT_PARAMETERS', default={'CacheControl': 'max-age=86400'})
+    AWS_S3_OBJECT_PARAMETERS = env.json(
+        "AWS_S3_OBJECT_PARAMETERS",
+        default={"CacheControl": "max-age=86400"},
+    )
 
     # s3 static settings
     STATIC_LOCATION = "static"
