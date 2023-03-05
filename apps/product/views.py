@@ -7,9 +7,9 @@ from django.shortcuts import (
     redirect,
     render,
 )
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView, DetailView
 
 from apps.product.forms import ProductForm
 from apps.product.models import Product
@@ -59,12 +59,9 @@ class ProductCreateView(View):
         return render(request, self.template_name, {"form": form})
 
 
-class ProductView(View):
-    template_name = "product.html"
-
-    def get(self, request, pk):
-        product = get_object_or_404(Product, uuid=pk)
-        return render(request, self.template_name, {"product": product})
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "product-detail.html"
 
 
 class ProductUpdateView(View):
@@ -99,10 +96,6 @@ class ProductUpdateView(View):
         return render(request, self.template_name, {"form": form, "product": product})
 
 
-def productDeleteView(request, pk):
-    product = get_object_or_404(Product, uuid=pk)
-    try:
-        product.delete()
-    except Exception as e:
-        logger.error(e)
-    return redirect(reverse('product:product-list'))
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy("product:product-list")
