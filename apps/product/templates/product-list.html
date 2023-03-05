@@ -2,6 +2,18 @@
 {% block content %}
 <div class="card-body">
     <h4>Products List</h4>
+    <form method="get">
+        <div class="form-group" class="form-inline mb-3">
+            <label for="modified">Filter by Modified:</label>
+            <select class="form-control" id="modified" name="modified">
+                <option value="" {% if modified == "" %}selected{% endif %}>All Products</option>
+                <option value="true" {% if modified == "true" %}selected{% endif %}>Modified Products</option>
+                <option value="false" {% if modified == "false" %}selected{% endif %}>Unmodified Products</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply Filter</button>
+    </form>
     <table class="table">
         <thead>
         <tr>
