@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 
+from django.utils.log import DEFAULT_LOGGING
 from environ import Env
 
 # Initialize environment variables
@@ -150,3 +152,30 @@ else:
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
     MEDIA_URL = "/mediafiles/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+
+# Logging settings
+log_date_format = "%Y-%m-%d %H:%M:%S"
+
+DEFAULT_LOGGING['handlers']['console'] = {
+    'class': 'logging.StreamHandler',
+    'formatter': 'colored',
+    'level': 'DEBUG',
+    'stream': sys.stdout,
+}
+DEFAULT_LOGGING['formatters']['colored'] = {
+    '()': 'colorlog.ColoredFormatter',
+    'format': '%(log_color)s{} %(asctime)s.%(msecs)03d - %(name)s - %(message)s'.format('\u2192'),
+    'datefmt': log_date_format,
+    'log_colors': {
+        'DEBUG': 'blue',
+        'INFO': 'green',
+        'WARNING': 'yellow',
+        'ERROR': 'red',
+        'CRITICAL': 'red,bg_white',
+    },
+}
+DEFAULT_LOGGING['loggers'][''] = {
+    'handlers': ['console'],
+    'level': 'INFO',
+    'propagate': False,
+}
