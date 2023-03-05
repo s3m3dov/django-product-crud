@@ -7,7 +7,6 @@ from config.validators import validate_file_size, validate_file_type
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = "__all__"
-        exclude = ["uuid", "created", "updated", "logo", "rotate_duration"]
+        fields = ["name", "description"]
 
     logo_file = forms.FileField(required=True, validators=[validate_file_size, validate_file_type])

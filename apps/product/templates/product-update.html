@@ -2,8 +2,11 @@
 {% block content %}
 <div class="card-body">
     <h4>Update Product</h4>
+    <div>
+        <img src="{{ product.logo }}" alt="product.name" width="100px" height="100px">
+    </div>
     <!--begin::Form-->
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
         <div class="form-group">
@@ -16,6 +19,11 @@
                    {% if field.field.required %}required{% endif %}>
             {% if field.help_text %}
             <small id="{{ field.id_for_label }}Help" class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+            {% if field.errors %}
+            {% for error in field.errors %}
+            <div class="alert alert-danger">{{ error }}</div>
+            {% endfor %}
             {% endif %}
         </div>
         {% endfor %}

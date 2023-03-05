@@ -1,7 +1,7 @@
-import base64
 import logging
 
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -14,7 +14,7 @@ from django.views.generic import ListView
 from apps.product.forms import ProductForm
 from apps.product.models import Product
 from apps.product.tasks import ImageUploadTask
-from apps.product.utils import generate_unique_filename
+from apps.product.utils import prep_file_data
 
 logger = logging.getLogger(__name__)
 
@@ -40,10 +40,7 @@ class ProductCreateView(View):
 
         if form.is_valid():
             logo_file = form.cleaned_data.get("logo_file")
-            filename = generate_unique_filename(logo_file.name)
-            mimetype = logo_file.content_type
-            encoded_file = base64.b64encode(logo_file.read()).decode("utf-8")
-            data = {"file": encoded_file, "name": filename, "mimetype": mimetype}
+            data = prep_file_data(logo_file)
 
             try:
                 product = form.save()
@@ -75,17 +72,30 @@ class ProductUpdateView(View):
 
     def post(self, request, pk):
         product = Product.objects.get(uuid=pk)
+        if product.modified:
+            return HttpResponse("Product has already been modified")
+
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
+            logo_file = form.cleaned_data.get("logo_file")
+            data = prep_file_data(logo_file)
+
             try:
                 form.save()
+                product.modified = True
+                product.save()
+                ImageUploadTask().delay(product.uuid, data)
                 return redirect(self.success_url)
             except Exception as e:
                 logger.error(e)
+
         return render(request, self.template_name, {"form": form, "product": product})
 
 
 def productDeleteView(request, pk):
     product = get_object_or_404(Product, uuid=pk)
-    product.delete()
+    try:
+        product.delete()
+    except Exception as e:
+        logger.error(e)
     return redirect(reverse('product:product-list'))
