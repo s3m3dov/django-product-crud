@@ -120,6 +120,10 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Limit settings
+PAGINATION_PAGE_SIZE = 10
+MAX_FILE_UPLOAD_SIZE = 1024 * 1024 * 3  # 3 MB
+
 # Celery settings
 CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672"
 CELERY_RESULT_BACKEND = "redis://localhost:6379"
