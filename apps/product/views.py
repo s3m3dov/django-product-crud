@@ -1,7 +1,7 @@
 import base64
 import logging
 
-from django.http import HttpResponseRedirect
+from django.conf import settings
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -23,7 +23,7 @@ class ProductListView(ListView):
     model = Product
     template_name = "product-list.html"
     context_object_name = "products"
-    paginate_by = 10
+    paginate_by = settings.PAGINATION_PAGE_SIZE
 
 
 class ProductCreateView(View):
@@ -41,8 +41,9 @@ class ProductCreateView(View):
         if form.is_valid():
             logo_file = form.cleaned_data.get("logo_file")
             filename = generate_unique_filename(logo_file.name)
+            mimetype = logo_file.content_type
             encoded_file = base64.b64encode(logo_file.read()).decode("utf-8")
-            data = {"file": encoded_file, "name": filename}
+            data = {"file": encoded_file, "name": filename, "mimetype": mimetype}
 
             try:
                 product = form.save()
@@ -82,7 +83,6 @@ class ProductUpdateView(View):
             except Exception as e:
                 logger.error(e)
         return render(request, self.template_name, {"form": form, "product": product})
-
 
 
 def productDeleteView(request, pk):
