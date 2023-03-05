@@ -13,6 +13,7 @@ django-storages = "^1.13.2"
 Pillow = "^9.4.0"
 celery = "5.1"
 redis = "^4.5.1"
+django-environ = "^0.10.0"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "^3.8.1"
