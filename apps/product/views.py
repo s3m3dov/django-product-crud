@@ -1,20 +1,20 @@
-import base64
 import logging
 
 from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import (
     get_object_or_404,
     redirect,
     render,
 )
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, DeleteView, DetailView
 
 from apps.product.forms import ProductForm
 from apps.product.models import Product
 from apps.product.tasks import ImageUploadTask
-from apps.product.utils import generate_unique_filename
+from apps.product.utils import prep_file_data
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +24,17 @@ class ProductListView(ListView):
     template_name = "product-list.html"
     context_object_name = "products"
     paginate_by = settings.PAGINATION_PAGE_SIZE
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        modified = self.request.GET.get("modified", None)
+        if modified is not None:
+            modified = modified.lower()
+            if modified == "true":
+                queryset = queryset.filter(modified=True)
+            elif modified == "false":
+                queryset = queryset.filter(modified=False)
+        return queryset
 
 
 class ProductCreateView(View):
@@ -40,10 +51,7 @@ class ProductCreateView(View):
 
         if form.is_valid():
             logo_file = form.cleaned_data.get("logo_file")
-            filename = generate_unique_filename(logo_file.name)
-            mimetype = logo_file.content_type
-            encoded_file = base64.b64encode(logo_file.read()).decode("utf-8")
-            data = {"file": encoded_file, "name": filename, "mimetype": mimetype}
+            data = prep_file_data(logo_file)
 
             try:
                 product = form.save()
@@ -55,12 +63,9 @@ class ProductCreateView(View):
         return render(request, self.template_name, {"form": form})
 
 
-class ProductView(View):
-    template_name = "product.html"
-
-    def get(self, request, pk):
-        product = get_object_or_404(Product, uuid=pk)
-        return render(request, self.template_name, {"product": product})
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = "product-detail.html"
 
 
 class ProductUpdateView(View):
@@ -75,17 +80,27 @@ class ProductUpdateView(View):
 
     def post(self, request, pk):
         product = Product.objects.get(uuid=pk)
+        if product.modified:
+            return HttpResponse("Product has already been modified")
+
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
+            logo_file = form.cleaned_data.get("logo_file")
+            data = prep_file_data(logo_file)
+
             try:
                 form.save()
+                product.modified = True
+                product.save()
+                ImageUploadTask().delay(product.uuid, data)
                 return redirect(self.success_url)
             except Exception as e:
                 logger.error(e)
+
         return render(request, self.template_name, {"form": form, "product": product})
 
 
-def productDeleteView(request, pk):
-    product = get_object_or_404(Product, uuid=pk)
-    product.delete()
-    return redirect(reverse('product:product-list'))
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = "product-delete.html"
+    success_url = reverse_lazy("product:product-list")
