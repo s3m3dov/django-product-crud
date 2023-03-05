@@ -8,6 +8,11 @@ authors = ["Hikmat Samadov <s3m3dov@hotmail.com>"]
 python = "^3.10"
 Django = "^4.1.7"
 uuid = "^1.30"
+boto3 = "^1.26.84"
+django-storages = "^1.13.2"
+Pillow = "^9.4.0"
+celery = "5.1"
+redis = "^4.5.1"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "^3.8.1"
