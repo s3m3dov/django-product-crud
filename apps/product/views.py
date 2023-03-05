@@ -29,7 +29,11 @@ class ProductListView(ListView):
         queryset = super().get_queryset()
         modified = self.request.GET.get("modified", None)
         if modified is not None:
-            queryset = queryset.filter(modified=(modified.lower() == "true"))
+            modified = modified.lower()
+            if modified == "true":
+                queryset = queryset.filter(modified=True)
+            elif modified == "false":
+                queryset = queryset.filter(modified=False)
         return queryset
 
 
