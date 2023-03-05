@@ -1,24 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="card-body">
-    <h4>Book List</h4>
+    <h4>Products List</h4>
     <table class="table">
         <thead>
         <tr>
             <th scope="col">Logo</th>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
-            <th scope="col">None</th>
-            <th scope="col">None</th>
+            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for product in products %}
         <tr>
-            <td>{{ product.logo }}</td>
+            <td><img src="{{ product.logo }}" alt="{{ product.name }}" width="60" height="60"></td>
             <td>{{ product.name }}</td>
             <td>{{ product.description }}</td>
-            <td>{{ product.name }}</td>
             <td>
                 <a type="button" class="btn btn-warning"
                    href="{% url 'product:product-update' product.uuid %}">Update</a>
