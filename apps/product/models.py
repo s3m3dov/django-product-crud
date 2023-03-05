@@ -4,6 +4,9 @@ from django.db import models
 
 
 class Product(models.Model):
+    class Meta:
+        ordering = ["-created"]
+
     name = models.CharField(max_length=120)
     description = models.TextField(blank=True, null=True)
     uuid = models.UUIDField(primary_key=True, default=uuid_lib.uuid4, editable=False)
