@@ -11,6 +11,7 @@ class Product(models.Model):
     updated = models.DateTimeField(auto_now=True)
     logo = models.URLField(blank=True, null=True)
     rotate_duration = models.FloatField(null=True)
+    modified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
