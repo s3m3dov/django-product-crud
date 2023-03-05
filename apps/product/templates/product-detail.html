@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <h4>Product Detail: {{object.name}}</h4>
+    <p>Name: {{object.name}}</p>
+    <p>Description: {{object.description}}</p>
+    <p>Created at: {{object.created}}</p>
+
+    {% if object.modified %}
+    <p>Updated at: {{object.updated}}</p>
+    <p>Is Modified: {{object.modified}}</p>
+    {% endif %}
+
+    <p>Rotate Duration: {{object.rotate_duration}}</p>
+
+
+    <img src="{{ product.logo }}" alt="product.name" width="100px" height="100px">
+    <div>
+        <a type="button" class="btn btn-info"
+           href="{% url 'product:product-list'%}">Back</a>
+        <a type="button" class="btn btn-warning"
+           href="{% url 'product:product-update' product.uuid %}">Update</a>
+        <a type="button" class="btn btn-danger"
+           href="{% url 'product:product-delete' product.uuid %}">Delete</a>
+    </div>
+</div>
+
+{% endblock content %}
