@@ -15,7 +15,7 @@
         <tbody>
         {% for product in products %}
         <tr>
-            <td>{{ product.logo }}</td>
+            <td><img src="{{ product.logo }}" alt="{{ product.name }}" width="60" height="60"></td>
             <td>{{ product.name }}</td>
             <td>{{ product.description }}</td>
             <td>{{ product.name }}</td>
