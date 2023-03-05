@@ -25,6 +25,13 @@ class ProductListView(ListView):
     context_object_name = "products"
     paginate_by = settings.PAGINATION_PAGE_SIZE
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        modified = self.request.GET.get("modified", None)
+        if modified is not None:
+            queryset = queryset.filter(modified=(modified.lower() == "true"))
+        return queryset
+
 
 class ProductCreateView(View):
     form_class = ProductForm
