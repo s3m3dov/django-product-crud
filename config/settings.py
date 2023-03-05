@@ -110,11 +110,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = "static/"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
@@ -123,6 +118,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Limit settings
 PAGINATION_PAGE_SIZE = 10
 MAX_FILE_UPLOAD_SIZE = 1024 * 1024 * 3  # 3 MB
+ALLOWED_FILE_TYPES = ["image/jpeg", "image/png"]
 
 # Celery settings
 CELERY_BROKER_URL = "amqp://guest:guest@localhost:5672"
