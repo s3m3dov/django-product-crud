@@ -23,11 +23,12 @@ class ImageUploadTask(Task):
         product = get_object_or_404(Product, uuid=product_uuid)
         file = data.get("file")
         filename = data.get("name")
+        mimetype = data.get("mimetype")
         image_bytes = base64.b64decode(file)
 
         # rotate the image
         st = time.time()
-        rotated_image_file = self.perform_image_rotation(image_bytes)
+        rotated_image_file = self.perform_image_rotation(image_bytes, mimetype)
         rotate_duration = time.time() - st
 
         # save product model
@@ -35,12 +36,13 @@ class ImageUploadTask(Task):
         product.rotate_duration = rotate_duration
         product.save()
 
-    def perform_image_rotation(self, image_bytes: bytes) -> bytes:
+    def perform_image_rotation(self, image_bytes: bytes, mimetype: str) -> bytes:
         img = Image.open(BytesIO(image_bytes))
         rotated_img = img.rotate(180)
+        format_str = mimetype.split("/")[1].upper()
 
         with BytesIO() as buffer:
-            rotated_img.save(buffer, format="JPEG")
+            rotated_img.save(buffer, format=format_str)
             image_bytes = buffer.getvalue()
 
         return image_bytes
