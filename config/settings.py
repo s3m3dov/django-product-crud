@@ -103,17 +103,12 @@ ALLOWED_FILE_TYPES = ["image/jpeg", "image/png"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@$o!5xxp5rxq033v2-@!r9*9wdsb^&^#-ajt%hb7zu5^nj!176"
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
+SECRET_KEY = env("DJANGO_SECRET_KEY")
+DEBUG = env.bool("DJANGO_DEBUG", default=False)
+ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
