@@ -5,7 +5,6 @@ FROM python:3.10-slim-bullseye
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-
 # Set the working directory to /app
 WORKDIR /app
 
@@ -28,8 +27,6 @@ ENV DJANGO_SETTINGS_MODULE=config.settings.prod
 # Expose the port on which the Django app will run
 EXPOSE 8000
 
-# Start the Django development server
+# Start the Django app
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-# Run the Django app using Gunicorn
 # CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
