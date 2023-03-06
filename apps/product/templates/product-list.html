@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card-body">
+    <h4>Products List</h4>
+    <form method="get">
+        <div class="form-group" class="form-inline mb-3">
+            <label for="modified">Filter by Modified:</label>
+            <select class="form-control" id="modified" name="modified">
+                <option value="" {% if modified == "" %}selected{% endif %}>All Products</option>
+                <option value="true" {% if modified == "true" %}selected{% endif %}>Modified Products</option>
+                <option value="false" {% if modified == "false" %}selected{% endif %}>Unmodified Products</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Apply Filter</button>
+    </form>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Logo</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for product in products %}
+        <tr>
+            <td><img src="{{ product.logo }}" alt="{{ product.name }}" width="60" height="60"></td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.description }}</td>
+            <td>
+                <a type="button" class="btn btn-info"
+                   href="{% url 'product:product-detail' product.uuid %}">View</a>
+                <a type="button" class="btn btn-warning"
+                   href="{% url 'product:product-update' product.uuid %}">Update</a>
+                <a type="button" class="btn btn-danger"
+                   href="{% url 'product:product-delete' product.uuid %}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a type="button" class="btn btn-success" href="{%url 'product:product-create' %}">Create</a>
+</div>
+{% endblock %}
