@@ -1,9 +1,9 @@
 # Django Product CRUD Viewpoints
 This is a Django project that provides views for managing products. The project implements a Product model with fields for name, description, uuid, created, updated, logo, and rotate_duration.
 
-API endpoints include CRUD operations for the Product model, with pagination for the product list, and filtering to show which products have been modified.
-
 The project uses Celery to handle the delayed task of loading the photo for the logo field and rotating the image 180 degrees. The project also implements the ability to change a product only once, and ensures adherence to PEP8 standards.
+
+The app is deployed on AWS, and you can access using this link: http://ec2-18-194-41-246.eu-central-1.compute.amazonaws.com/
 
 ## Requirements
 - Git repository access for Max Alekseev (max@3dlook.me) and Denys Havryliv (denys.havryliv@3dlook.me)
