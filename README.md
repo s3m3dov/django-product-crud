@@ -20,7 +20,7 @@ The app is deployed on AWS, and you can access it using this link: http://ec2-18
 - Run migrations with `python manage.py migrate`
 - Start the development server with `python manage.py runserver`
 
-## Used AWS Services:
+## Used AWS Services
 - AWS EC2 - for deploying django app on linux instance (Used docker, nginx, gunicorn)
 - AWS S3 BUCKET - for media files
 - Amazon MQ - Used Rabbit MQ
