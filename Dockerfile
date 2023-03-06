@@ -28,5 +28,4 @@ ENV DJANGO_SETTINGS_MODULE=config.settings.prod
 EXPOSE 8000
 
 # Start the Django app
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "config.wsgi:application"]
