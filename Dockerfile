@@ -9,13 +9,14 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Copy the requirements file into the container
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml /app/
 
 # Install poetry
 RUN pip install poetry
 
 # Install the app's dependencies
 RUN poetry config virtualenvs.create false
+RUN poetry lock
 RUN poetry install --only main --no-interaction --no-ansi
 
 # Copy the rest of the application code into the container
